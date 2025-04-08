@@ -107,6 +107,8 @@ impl b1x8 {
     }
 }
 
+use half::bf16;
+pub use half::bf16;
 /// A struct representing a half-precision floating-point number based on the IEEE 754 standard.
 ///
 /// This struct uses an `i16` to store the half-precision floating-point data, which includes
@@ -116,9 +118,38 @@ pub use half::f16;
 #[allow(non_camel_case_types)]
 #[derive(Clone, Copy)]
 pub struct f16(i16);*/
-impl HalfUSearchExt for f16 {}
+impl Bf16HalfUSearchExt for bf16 {}
 
-pub trait HalfUSearchExt {
+pub trait Bf16HalfUSearchExt {
+    /// Casts a slice of `i16` integers to a slice of `f16`, allowing operations on half-precision
+    /// floating-point data stored in standard 16-bit integer arrays.
+    fn from_i16s(slice: &[i16]) -> &[half::bf16] {
+        unsafe { bytemuck::cast_slice(slice) }
+        //unsafe { std::slice::from_raw_parts(slice.as_ptr() as *const Self, slice.len()) }
+    }
+    /// Casts a mutable slice of `i16` integers to a mutable slice of `f16`, enabling mutable operations
+    /// on half-precision floating-point data.
+    fn from_mut_i16s(slice: &mut [i16]) -> &mut [half::bf16] {
+        unsafe { bytemuck::cast_slice_mut(slice) }
+    }
+
+    /// Converts a slice of `f16` back to a slice of `i16`, useful for storage or manipulation in formats
+    /// that require standard integer types.
+    fn to_i16s(slice: &[bf16]) -> &[i16] {
+        unsafe { bytemuck::cast_slice(slice) }
+    }
+
+    /// Converts a mutable slice of `f16` back to a mutable slice of `i16`, enabling further
+    /// modifications on the original integer data after operations involving half-precision
+    /// floating-point numbers.
+    fn to_mut_i16s(slice: &mut [bf16]) -> &mut [i16] {
+        unsafe { bytemuck::cast_slice_mut(slice) }
+    }
+}
+
+impl F16HalfUSearchExt for f16 {}
+
+pub trait F16HalfUSearchExt {
     /// Casts a slice of `i16` integers to a slice of `f16`, allowing operations on half-precision
     /// floating-point data stored in standard 16-bit integer arrays.
     fn from_i16s(slice: &[i16]) -> &[half::f16] {
