@@ -122,26 +122,26 @@ pub trait HalfUSearchExt {
     /// Casts a slice of `i16` integers to a slice of `f16`, allowing operations on half-precision
     /// floating-point data stored in standard 16-bit integer arrays.
     fn from_i16s(slice: &[i16]) -> &[half::f16] {
-        bytemuck::cast(slice)
+        unsafe { bytemuck::cast_slice(slice) }
         //unsafe { std::slice::from_raw_parts(slice.as_ptr() as *const Self, slice.len()) }
     }
     /// Casts a mutable slice of `i16` integers to a mutable slice of `f16`, enabling mutable operations
     /// on half-precision floating-point data.
     fn from_mut_i16s(slice: &mut [i16]) -> &mut [half::f16] {
-        bytemuck::cast(slice)
+        unsafe { bytemuck::cast_slice_mut(slice) }
     }
 
     /// Converts a slice of `f16` back to a slice of `i16`, useful for storage or manipulation in formats
     /// that require standard integer types.
     fn to_i16s(slice: &[f16]) -> &[i16] {
-        bytemuck::cast(slice)
+        unsafe { bytemuck::cast_slice(slice) }
     }
 
     /// Converts a mutable slice of `f16` back to a mutable slice of `i16`, enabling further
     /// modifications on the original integer data after operations involving half-precision
     /// floating-point numbers.
     fn to_mut_i16s(slice: &mut [f16]) -> &mut [i16] {
-        bytemuck::cast(slice)
+        unsafe { bytemuck::cast_slice_mut(slice) }
     }
 }
 /*impl f16 {
