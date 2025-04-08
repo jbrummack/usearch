@@ -133,14 +133,14 @@ pub trait HalfUSearchExt {
 
     /// Converts a slice of `f16` back to a slice of `i16`, useful for storage or manipulation in formats
     /// that require standard integer types.
-    fn to_i16s(slice: &[Self]) -> &[i16] {
+    fn to_i16s(slice: &[f16]) -> &[i16] {
         bytemuck::cast(slice)
     }
 
     /// Converts a mutable slice of `f16` back to a mutable slice of `i16`, enabling further
     /// modifications on the original integer data after operations involving half-precision
     /// floating-point numbers.
-    fn to_mut_i16s(slice: &mut [Self]) -> &mut [i16] {
+    fn to_mut_i16s(slice: &mut [f16]) -> &mut [i16] {
         bytemuck::cast(slice)
     }
 }
