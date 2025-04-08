@@ -117,6 +117,32 @@ pub use half::f16;
 #[derive(Clone, Copy)]
 pub struct f16(i16);*/
 
+pub trait HalfUSearchExt {
+    /// Casts a slice of `i16` integers to a slice of `f16`, allowing operations on half-precision
+    /// floating-point data stored in standard 16-bit integer arrays.
+    pub fn from_i16s(slice: &[i16]) -> &[half::f16] {
+        bytemuck::cast(slice)
+        //unsafe { std::slice::from_raw_parts(slice.as_ptr() as *const Self, slice.len()) }
+    }
+    /// Casts a mutable slice of `i16` integers to a mutable slice of `f16`, enabling mutable operations
+    /// on half-precision floating-point data.
+    pub fn from_mut_i16s(slice: &mut [i16]) -> &mut [half::f16] {
+        bytemuck::cast(slice)
+    }
+
+    /// Converts a slice of `f16` back to a slice of `i16`, useful for storage or manipulation in formats
+    /// that require standard integer types.
+    pub fn to_i16s(slice: &[Self]) -> &[i16] {
+        bytemuck::cast(slice)
+    }
+
+    /// Converts a mutable slice of `f16` back to a mutable slice of `i16`, enabling further
+    /// modifications on the original integer data after operations involving half-precision
+    /// floating-point numbers.
+    pub fn to_mut_i16s(slice: &mut [Self]) -> &mut [i16] {
+        bytemuck::cast(slice)
+    }
+}
 /*impl f16 {
     /// Casts a slice of `i16` integers to a slice of `f16`, allowing operations on half-precision
     /// floating-point data stored in standard 16-bit integer arrays.

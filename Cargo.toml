@@ -29,6 +29,7 @@ name = "usearch"
 path = "rust/lib.rs"
 
 [dependencies]
+bytemuck = "1.22.0"
 cxx = "1.0"
 half = "2.6.0"
 
