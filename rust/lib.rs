@@ -111,12 +111,13 @@ impl b1x8 {
 ///
 /// This struct uses an `i16` to store the half-precision floating-point data, which includes
 /// 1 sign bit, 5 exponent bits, and 10 mantissa bits.
-#[repr(transparent)]
+pub use half::f16;
+/*#[repr(transparent)]
 #[allow(non_camel_case_types)]
 #[derive(Clone, Copy)]
-pub struct f16(i16);
+pub struct f16(i16);*/
 
-impl f16 {
+/*impl f16 {
     /// Casts a slice of `i16` integers to a slice of `f16`, allowing operations on half-precision
     /// floating-point data stored in standard 16-bit integer arrays.
     pub fn from_i16s(slice: &[i16]) -> &[Self] {
@@ -141,7 +142,7 @@ impl f16 {
     pub fn to_mut_i16s(slice: &mut [Self]) -> &mut [i16] {
         unsafe { std::slice::from_raw_parts_mut(slice.as_mut_ptr() as *mut i16, slice.len()) }
     }
-}
+}*/
 
 impl BitAddressable for b1x8 {
     /// Sets a bit at a specific index within the byte.
@@ -212,7 +213,7 @@ impl BitAddressable for [b1x8] {
     }
 }
 
-impl PartialEq for f16 {
+/*impl PartialEq for f16 {
     fn eq(&self, other: &Self) -> bool {
         // Check for NaN values first (exponent all ones and non-zero mantissa)
         let nan_self = (self.0 & 0x7C00) == 0x7C00 && (self.0 & 0x03FF) != 0;
@@ -223,7 +224,7 @@ impl PartialEq for f16 {
 
         self.0 == other.0
     }
-}
+}*/
 
 impl std::fmt::Debug for b1x8 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -231,7 +232,7 @@ impl std::fmt::Debug for b1x8 {
     }
 }
 
-impl std::fmt::Debug for f16 {
+/*impl std::fmt::Debug for f16 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let bits = self.0;
         let sign = (bits >> 15) & 1;
@@ -239,7 +240,7 @@ impl std::fmt::Debug for f16 {
         let mantissa = bits & 0x3FF;
         write!(f, "{}|{:05b}|{:010b}", sign, exponent, mantissa)
     }
-}
+}*/
 
 #[cxx::bridge]
 pub mod ffi {
@@ -514,7 +515,6 @@ pub struct Index {
 
 unsafe impl Send for Index {}
 unsafe impl Sync for Index {}
-
 
 impl Default for ffi::IndexOptions {
     fn default() -> Self {
