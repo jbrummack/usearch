@@ -116,6 +116,7 @@ pub use half::f16;
 #[allow(non_camel_case_types)]
 #[derive(Clone, Copy)]
 pub struct f16(i16);*/
+impl HalfUSearchExt for f16 {}
 
 pub trait HalfUSearchExt {
     /// Casts a slice of `i16` integers to a slice of `f16`, allowing operations on half-precision
