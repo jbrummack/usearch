@@ -119,8 +119,8 @@ use half::f16;
 #[derive(Clone, Copy)]
 pub struct f16(i16);*/
 impl Bf16HalfUSearchExt for bf16 {}
-
-pub trait Bf16HalfUSearchExt {
+#[allow(dead_code)]
+trait Bf16HalfUSearchExt {
     /// Casts a slice of `i16` integers to a slice of `f16`, allowing operations on half-precision
     /// floating-point data stored in standard 16-bit integer arrays.
     fn from_i16s(slice: &[i16]) -> &[half::bf16] {
