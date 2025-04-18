@@ -31,7 +31,7 @@ path = "rust/lib.rs"
 [dependencies]
 bytemuck = "1.22.0"
 cxx = "1.0"
-half = { version = "2.6.0", features = ["bytemuck", "serde"] }
+half = { version = "2.6.0", features = ["bytemuck"] }
 
 [build-dependencies]
 cxx-build = "1.0"

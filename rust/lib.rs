@@ -113,7 +113,7 @@ use half::bf16;
 ///
 /// This struct uses an `i16` to store the half-precision floating-point data, which includes
 /// 1 sign bit, 5 exponent bits, and 10 mantissa bits.
-pub use half::f16;
+use half::f16;
 /*#[repr(transparent)]
 #[allow(non_camel_case_types)]
 #[derive(Clone, Copy)]
@@ -507,7 +507,8 @@ pub use ffi::{IndexOptions, MetricKind, ScalarKind};
 /// # Examples
 ///
 /// ```
-/// use usearch::{MetricFunction, Distance, f16, b1x8};
+/// use half::f16;
+/// use usearch::{MetricFunction, Distance, b1x8};
 ///
 /// // Example of defining a custom Euclidean distance function for f32 vectors
 /// let euclidean: MetricFunction = MetricFunction::F32Metric(Box::new(|a, b| {
@@ -1595,7 +1596,7 @@ mod tests {
         let mut found_vec: Vec<bf16> = Vec::new();
         assert_eq!(index.export(1, &mut found_vec).unwrap(), 1);
         assert_eq!(found_vec.len(), 5);
-        assert_eq!(found_vec, first.to_vec());
+        assert_eq!(found_vec, first.to_vec()); //it seems to be using f16 instead of bf16
 
         // Test using slice
         let mut found_slice = [bf16::from_f32(0.0); 5];
