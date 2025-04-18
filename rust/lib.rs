@@ -1483,6 +1483,14 @@ mod tests {
         })
         .unwrap();
 
+        let bf16_index = Index::new(&IndexOptions {
+            dimensions: 256,
+            metric: MetricKind::Cos,
+            quantization: ScalarKind::F16,
+            ..Default::default()
+        })
+        .unwrap();
+
         let i8_index = Index::new(&IndexOptions {
             dimensions: 256,
             metric: MetricKind::Cos,
@@ -1510,6 +1518,10 @@ mod tests {
         println!(
             "f16 hardware acceleration: {}",
             f16_index.hardware_acceleration()
+        );
+        println!(
+            "bf16 hardware acceleration: {}",
+            bf16_index.hardware_acceleration()
         );
         println!(
             "i8 hardware acceleration: {}",
