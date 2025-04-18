@@ -1535,6 +1535,42 @@ mod tests {
     }
 
     #[test]
+    fn test_add_get_vector_f16() {
+        use half::f16;
+        let mut options = IndexOptions::default();
+        options.dimensions = 5;
+        options.quantization = ScalarKind::F16;
+        let index = Index::new(&options).unwrap();
+        assert!(index.reserve(10).is_ok());
+
+        let first: [f16; 5] = [0.2, 0.1, 0.2, 0.1, 0.3].map(|scalar| f16::from_f32(scalar));
+        let second: [f16; 5] = [0.3, 0.2, 0.4, 0.0, 0.1].map(|scalar| f16::from_f32(scalar));
+        let too_long: [f16; 6] = [0.3, 0.2, 0.4, 0.0, 0.1, 0.1].map(|scalar| f16::from_f32(scalar));
+        let too_short: [f16; 4] = [0.3, 0.2, 0.4, 0.0].map(|scalar| f16::from_f32(scalar));
+        assert!(index.add(1, &first).is_ok());
+        assert!(index.add(2, &second).is_ok());
+        assert!(index.add(3, &too_long).is_err());
+        assert!(index.add(4, &too_short).is_err());
+        assert_eq!(index.size(), 2);
+
+        // Test using Vec<T>
+        let mut found_vec: Vec<f16> = Vec::new();
+        assert_eq!(index.export(1, &mut found_vec).unwrap(), 1);
+        assert_eq!(found_vec.len(), 5);
+        assert_eq!(found_vec, first.to_vec());
+
+        // Test using slice
+        let mut found_slice = [f16::from_f32(0.0); 5];
+        assert_eq!(index.get(1, &mut found_slice).unwrap(), 1);
+        assert_eq!(found_slice, first);
+
+        // Create a slice with incorrect size
+        let mut found = [f16::from_f32(0.0); 6]; // This isn't a multiple of the index's dimensions.
+        let result = index.get(1, &mut found);
+        assert!(result.is_err());
+    }
+
+    #[test]
     fn test_add_get_vector() {
         let mut options = IndexOptions::default();
         options.dimensions = 5;
