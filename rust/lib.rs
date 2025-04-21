@@ -17,6 +17,9 @@
 //!
 //! Refer to the `Index` struct for detailed usage examples.
 
+mod highlevel;
+pub use highlevel::{Search, SearchBuilder};
+
 /// The key type used to identify vectors in the index.
 /// It is a 64-bit unsigned integer.
 pub type Key = u64;
@@ -692,6 +695,8 @@ pub trait VectorType {
     ) -> Result<(), cxx::Exception>
     where
         Self: Sized;
+
+    fn quant_type() -> ScalarKind;
 }
 
 impl VectorType for f32 {
@@ -760,6 +765,10 @@ impl VectorType for f32 {
 
         Ok(())
     }
+
+    fn quant_type() -> ScalarKind {
+        ScalarKind::F32
+    }
 }
 
 impl VectorType for i8 {
@@ -827,6 +836,9 @@ impl VectorType for i8 {
 
         Ok(())
     }
+    fn quant_type() -> ScalarKind {
+        ScalarKind::I8
+    }
 }
 
 impl VectorType for f64 {
@@ -893,6 +905,9 @@ impl VectorType for f64 {
         }
 
         Ok(())
+    }
+    fn quant_type() -> ScalarKind {
+        ScalarKind::F64
     }
 }
 
@@ -966,6 +981,10 @@ impl VectorType for bf16 {
 
         Ok(())
     }
+
+    fn quant_type() -> ScalarKind {
+        ScalarKind::BF16
+    }
 }
 impl VectorType for f16 {
     fn search(index: &Index, query: &[Self], count: usize) -> Result<ffi::Matches, cxx::Exception> {
@@ -1035,6 +1054,10 @@ impl VectorType for f16 {
         }
 
         Ok(())
+    }
+
+    fn quant_type() -> ScalarKind {
+        ScalarKind::F16
     }
 }
 
@@ -1106,6 +1129,10 @@ impl VectorType for b1x8 {
         }
 
         Ok(())
+    }
+
+    fn quant_type() -> ScalarKind {
+        ScalarKind::B1
     }
 }
 
