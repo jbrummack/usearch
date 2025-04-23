@@ -80,6 +80,9 @@ impl<T: VectorType, const D: usize> Search<T, D> {
     pub fn insert(&self, vector: [T; D], key: u64) -> Result<(), cxx::Exception> {
         self.index.add(key, &vector)
     }
+    pub fn insert_slice(&self, vector: &[T], key: u64) -> Result<(), cxx::Exception> {
+        self.index.add(key, &vector)
+    }
     pub fn new(options: IndexOptions) -> Result<Self, cxx::Exception> {
         let mut options = options;
         options.quantization = T::quant_type();
