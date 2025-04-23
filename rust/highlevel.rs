@@ -2,7 +2,7 @@ use std::marker::PhantomData;
 
 use crate::{ffi::Matches, Index, IndexOptions, MetricKind, VectorType};
 
-pub struct Search<T: VectorType> {
+pub struct Search<T: VectorType, const D: usize> {
     _type_marker: PhantomData<T>,
     index: Index,
 }
@@ -63,9 +63,13 @@ impl<T: VectorType> SearchBuilder<T> {
     }
 }
 
-impl<T: VectorType> Search<T> {
-    pub fn search(&self, vector: &[T], count: usize) -> Result<Vec<ResultElement>, cxx::Exception> {
-        let Matches { keys, distances } = self.index.search(vector, count)?;
+impl<T: VectorType, const D: usize> Search<T, D> {
+    pub fn search(
+        &self,
+        vector: [T; D],
+        count: usize,
+    ) -> Result<Vec<ResultElement>, cxx::Exception> {
+        let Matches { keys, distances } = self.index.search(&vector, count)?;
         let output: Vec<_> = keys
             .into_iter()
             .zip(distances)
@@ -73,12 +77,13 @@ impl<T: VectorType> Search<T> {
             .collect();
         Ok(output)
     }
-    pub fn insert(&self, vector: &[T], key: u64) -> Result<(), cxx::Exception> {
-        self.index.add(key, vector)
+    pub fn insert(&self, vector: [T; D], key: u64) -> Result<(), cxx::Exception> {
+        self.index.add(key, &vector)
     }
     pub fn new(options: IndexOptions) -> Result<Self, cxx::Exception> {
         let mut options = options;
         options.quantization = T::quant_type();
+        options.dimensions = D;
         Ok(Self {
             _type_marker: PhantomData,
             index: Index::new(&options)?,
