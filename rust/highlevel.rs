@@ -368,10 +368,10 @@ impl<T: VectorType, const D: usize, M: MetricType> HighLevel<T, D, M> {
     }
 }
 
-pub struct Search<T: VectorType, const D: usize> {
+/*pub struct Search<T: VectorType, const D: usize> {
     _type_marker: PhantomData<T>,
     index: Index,
-}
+}*/
 #[derive(Debug, Clone, Copy)]
 pub struct ResultElement {
     pub distance: f32,
