@@ -34,7 +34,7 @@ use std::marker::PhantomData;
 pub struct HighLevel<T: VectorType, const D: usize, M: MetricType> {
     _t: PhantomData<T>,
     _m: PhantomData<M>,
-    index: Index,
+    pub(crate) index: Index,
 }
 impl Matches {
     pub fn result(self) -> Vec<ResultElement> {
