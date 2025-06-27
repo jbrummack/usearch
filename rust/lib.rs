@@ -16,9 +16,11 @@
 //! ## Quick Start
 //!
 //! Refer to the `Index` struct for detailed usage examples.
-
 mod highlevel;
-pub use highlevel::{Search, SearchBuilder};
+pub mod metric;
+//export so that the error can be used in the thiserror crate
+pub use cxx::Exception;
+pub use highlevel::HighLevel;
 
 /// The key type used to identify vectors in the index.
 /// It is a 64-bit unsigned integer.
@@ -1471,13 +1473,30 @@ mod tests {
 
     use crate::b1x8;
     // use crate::f16;
+    use crate::metric::Cos;
+    use crate::metric::IP;
     use crate::new_index;
+    use crate::HighLevel;
     //use crate::Distance;
     use crate::Index;
     use crate::Key;
 
     use std::env;
-
+    #[test]
+    fn high_level() {
+        let index = HighLevel::<f32, 4, Cos>::try_default().expect("Failed to create index.");
+        index.reserve(1000).expect("Failed to reserve capacity.");
+        let vector1: Vec<f32> = vec![0.0, 1.0, 0.0, 1.0];
+        let vector2: Vec<f32> = vec![1.0, 0.0, 1.0, 0.0];
+        index.add(1, &vector1).expect("Failed to add vector1.");
+        index.add(2, &vector2).expect("Failed to add vector2.");
+        let query: Vec<f32> = vec![0.5, 0.5, 0.5, 0.5];
+        let results = index.search(&query, 5).expect("Search failed.").result();
+        println!("Cos: {results:?}");
+        let ip_index = index.change_metric::<IP>();
+        let results = ip_index.search(&query, 5).expect("Search failed.").result();
+        println!("IP:  {results:?}");
+    }
     #[test]
     fn print_specs() {
         print!("--------------------------------------------------\n");
